@@ -2,11 +2,11 @@ import express from 'express';
 import dotenv from 'dotenv';
 import connectDB from './config/db.js';
 import morgan from 'morgan';
-import colors from 'colors';
 import authrouter from './routes/authroutes.js';
 import categoryrouter from './routes/categoryroutes.js';
 import productrouter from './routes/productroutes.js';
 import cors from 'cors';
+
 //for deployment 
 import path from 'path';
 import { fileURLToPath } from 'url';
