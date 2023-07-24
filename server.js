@@ -8,6 +8,11 @@ import categoryrouter from './routes/categoryroutes.js';
 import productrouter from './routes/productroutes.js';
 import cors from 'cors';
 
+// es6 module fix
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 // for deployment 
 import path from 'path';
 app.use(express.static(path.join(__dirname, "./client/build")));
