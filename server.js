@@ -7,16 +7,23 @@ import authrouter from './routes/authroutes.js';
 import categoryrouter from './routes/categoryroutes.js';
 import productrouter from './routes/productroutes.js';
 import cors from 'cors';
-
-// for deployment 
+//for deployment 
 import path from 'path';
-app.use(express.static(path.join(__dirname, "./client/build")));
+import { fileURLToPath } from 'url';
+
 
 // configure env
 dotenv.config();
 
+
+// es6 fix we can't use __dirname in es6
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+
 // database config
 connectDB();
+
 
 //rest object 
 const app = express();
@@ -25,6 +32,11 @@ const app = express();
 app.use(express.json());
 app.use(morgan('dev'));
 app.use(cors());
+
+// for deployment 
+app.use(express.static(path.join(__dirname, "./client/build")));
+
+
 
 //routes
 app.use('/api/v1/auth', authrouter);
