@@ -1,29 +1,36 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import connectDB from './config/db.js';
-import morgan from 'morgan';
-import authrouter from './routes/authroutes.js';
 import categoryrouter from './routes/categoryroutes.js';
 import productrouter from './routes/productroutes.js';
 import cors from 'cors';
 
-// for deployment 
+// for deployment
+
 import path from 'path';
-app.use(express.static(path.join(__dirname, "./client/build")));
+import { fileURLToPath } from 'url';
+
 
 // configure env
 dotenv.config();
 
+
+// es6 fix we can't use __dirname in es6
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+
 // database config
 connectDB();
+
 
 //rest object 
 const app = express();
 
-//middlewares
-app.use(express.json());
 app.use(morgan('dev'));
 app.use(cors());
+
+// for deployment 
+app.use(express.static(path.join(__dirname, "./client/build")));
+
+
 
 //routes
 app.use('/api/v1/auth', authrouter);
@@ -39,14 +46,14 @@ app.use("*", function (req, res) {
 
 
 // rest api normal
-app.get('/', (req, res) => {
-    res.send('<h1>welcome to ecommerce app api</h1>')
-})
+// app.get('/', (req, res) => {
+//     res.send('<h1>welcome to ecommerce app api</h1>')
+// })
 
 //PORT
 const PORT = process.env.PORT || 8080;
 
 //run listen
 app.listen(PORT, () => {
-    console.log(`server running at ${PORT}`);
+    (`server running at ${PORT}`.bgCyan)
 });
