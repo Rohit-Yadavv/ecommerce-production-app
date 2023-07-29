@@ -30,6 +30,9 @@ const productSchema = new mongoose.Schema({
         data: Buffer,
         contentType: String
     },
+    trending: {
+        type: Boolean,
+    },
     shipping: {
         type: Boolean,
     }

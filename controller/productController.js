@@ -129,7 +129,7 @@ export const deleteProductController = async (req, res) => {
     } catch (error) {
         res.status(500).send({
             success: false,
-            message: "Error while getting photo",
+            message: "Error while deleting",
             error,
         });
     }
@@ -245,19 +245,60 @@ export const listProductController = async (req, res) => {
     }
 };
 
+
+// trending products 
+export const trendingProductsController = async (req, res) => {
+    try {
+        const products = await productModel.find({ trending: true })
+            .populate("category")
+            .select("-photo")
+            .limit(10)
+            .sort({ createdAt: -1 });
+        res.status(200).send({
+            success: true,
+            products,
+        });
+    } catch (error) {
+        res.status(400).send({
+            success: false,
+            message: "error in finding trending products",
+            error,
+        });
+    }
+};
+
 // search product
 export const searchProductController = async (req, res) => {
     try {
         const { keyword } = req.params;
-        const resutls = await productModel
-            .find({
-                $or: [
-                    { name: { $regex: keyword, $options: "i" } },
-                    { description: { $regex: keyword, $options: "i" } },
-                ],
-            })
-            .select("-photo");
-        res.json(resutls);
+        // const results` = await productModel
+        //     .find({
+        //         $or: [
+        //             { name: { $regex: keyword, $options: "i" } },
+        //             { description: { $regex: keyword, $options: "i" } },
+        //         ],
+        //     })
+        const results = await productModel.aggregate([
+            {
+                $lookup: {
+                    from: 'categories', // The name of the collection to perform the join with
+                    localField: 'category', // The field from the "Product" model used for joining
+                    foreignField: '_id',  // The field from the "Category" model used for joining
+                    as: 'categoryData',  // The name of the new field in the output document
+                },
+            },
+            {
+                $match: {
+                    $or: [
+                        { name: { $regex: keyword, $options: 'i' } },
+                        { description: { $regex: keyword, $options: 'i' } },
+                        { 'categoryData.name': { $regex: keyword, $options: 'i' } },
+                    ],
+                },
+            },
+        ]).select("-photo");
+
+        res.json(results);
     } catch (error) {
         res.status(400).send({
             success: false,
@@ -296,7 +337,7 @@ export const realtedProductController = async (req, res) => {
 export const productCategoryController = async (req, res) => {
     try {
         const category = await categoryModel.findOne({ slug: req.params.slug });
-        const products = await productModel.find({ category }).populate("category");
+        const products = await productModel.find({ category }).populate("category").select("-photo");
         res.status(200).send({
             success: true,
             category,
@@ -310,6 +351,56 @@ export const productCategoryController = async (req, res) => {
         });
     }
 };
+
+
+// get product under price 
+export const productUnderController = async (req, res) => {
+    try {
+        const priceFromParams = req.params.price;
+        console.log(priceFromParams);
+        const products = await productModel.find({ price: { $lt: priceFromParams } }).select("-photo");
+        res.status(200).send({
+            success: true,
+            products,
+        });
+    } catch (error) {
+        res.status(400).send({
+            success: false,
+            error,
+            message: "Error While Getting products",
+        });
+    }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // payment gateway api
 

@@ -1,6 +1,6 @@
 import express from 'express';
 import { isAdmin, requireSignIn } from '../middleware/authMiddleware.js';
-import { brainTreePaymentController, braintreeTokenController, productCategoryController, realtedProductController, searchProductController, listProductController, filterProductController, countProductController, createProductController, getProductsController, getSingleProductController, productPhotoController, deleteProductController, updateProductController } from '../controller/productController.js';
+import { productUnderController, trendingProductsController, brainTreePaymentController, braintreeTokenController, productCategoryController, realtedProductController, searchProductController, listProductController, filterProductController, countProductController, createProductController, getProductsController, getSingleProductController, productPhotoController, deleteProductController, updateProductController } from '../controller/productController.js';
 import formidable from 'express-formidable';
 
 
@@ -19,7 +19,7 @@ router.put("/update-product/:pid", requireSignIn, isAdmin, formidable(),
 // get products
 router.get('/get-products', formidable(), getProductsController);
 
-//single product
+//single product 
 router.get("/get-product/:slug", getSingleProductController);
 
 //get photo
@@ -45,6 +45,15 @@ router.get("/related-product/:pid/:cid", realtedProductController);
 
 //category wise product
 router.get("/product-category/:slug", productCategoryController);
+
+//category wise product
+router.get("/trending-products", trendingProductsController);
+
+//product under 199, 399... 
+router.get("/product-under/:price", productUnderController);
+
+
+
 
 //payments routes
 // --------------------------------------
