@@ -2,15 +2,14 @@ import express from 'express';
 import dotenv from 'dotenv';
 import connectDB from './config/db.js';
 import morgan from 'morgan';
-import colors from 'colors';
 import authrouter from './routes/authroutes.js';
 import categoryrouter from './routes/categoryroutes.js';
 import productrouter from './routes/productroutes.js';
 import cors from 'cors';
 
 // for deployment 
-// import path from 'path';
-// app.use(express.static(path.join(__dirname, "./client/build")));
+import path from 'path';
+app.use(express.static(path.join(__dirname, "./client/build")));
 
 // configure env
 dotenv.config();
@@ -34,9 +33,9 @@ app.use('/api/v1/product', productrouter);
 
 
 // rest api deployment
-// app.use("*", function (req, res) {
-//     res.sendFile(path.join(__dirname, "./client/build/index.html"))
-// })
+app.use("*", function (req, res) {
+    res.sendFile(path.join(__dirname, "./client/build/index.html"))
+})
 
 
 // rest api normal
@@ -49,5 +48,5 @@ const PORT = process.env.PORT || 8080;
 
 //run listen
 app.listen(PORT, () => {
-    console.log(`server running at ${PORT}`.bgCyan);
+    console.log(`server running at ${PORT}`);
 });
