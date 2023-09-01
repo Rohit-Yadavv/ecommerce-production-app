@@ -23,7 +23,6 @@ const __dirname = path.dirname(__filename);
 
 
 // database config
-connectDB();
 
 
 //rest object 
@@ -59,6 +58,8 @@ app.use("*", function (req, res) {
 const PORT = process.env.PORT || 8080;
 
 //run listen
-app.listen(PORT, () => {
-    (`server running at ${PORT}`)
-});
+connectDB().then(() => {
+    app.listen(PORT, () => {
+        console.log("listening for requests");
+    })
+})
