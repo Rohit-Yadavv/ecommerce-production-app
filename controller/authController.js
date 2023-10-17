@@ -6,8 +6,8 @@ import orderModel from "../models/orderModel.js";
 
 export const registerController = async (req, res) => {
     try {
+        console.log(req);
         const { name, email, password, answer, phone, address } = req.body;
-
         // validation
         if (!name) return res.send({ message: 'name is required' });
         if (!email) return res.send({ message: 'email is required' });

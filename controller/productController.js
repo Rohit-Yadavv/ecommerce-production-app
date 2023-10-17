@@ -22,7 +22,6 @@ export const createProductController = async (req, res) => {
         const { photo } = req.files;
 
         //validation
-
         switch (true) {
             case !name: return res.status(500).send({ message: "Name is required" })
             case !description: return res.status(500).send({ message: "description is required" })
